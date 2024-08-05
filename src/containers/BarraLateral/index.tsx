@@ -1,20 +1,40 @@
-import FiltroCard from '../../components/FiltroCard'
-
+import { useDispatch, useSelector } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
 import * as S from './styles'
+import { RootReducer } from '../../store'
+import { alteraTermo } from '../../store/reducers/filtro'
+import { Campo } from '../../styles'
+import { Botao } from '../../styles'
 
-const BarraLateral = () => (
-  <S.Aside>
-    <div>
-      <S.Campo type="text" placeholder="Buscar" />
-      <S.Filtros>
-        <FiltroCard legenda="pendentes" contador={1} />
-        <FiltroCard legenda="concluidas" contador={2} />
-        <FiltroCard legenda="urgente" contador={3} />
-        <FiltroCard legenda="importantes" contador={4} />
-        <FiltroCard legenda="normal" contador={5} ativo />
-        <FiltroCard legenda="todas" contador={10} />
-      </S.Filtros>
-    </div>
-  </S.Aside>
-)
+type Props = {
+  mostrarFiltros: boolean
+}
+
+const BarraLateral = ({ mostrarFiltros }: Props) => {
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
+  const { termo } = useSelector((state: RootReducer) => state.filtro)
+
+  return (
+    <S.Aside>
+      <div>
+        {mostrarFiltros ? (
+          <>
+            <Campo
+              type="text"
+              placeholder="Buscar"
+              value={termo}
+              onChange={(evento) => dispatch(alteraTermo(evento.target.value))}
+            />
+          </>
+        ) : (
+          <Botao onClick={() => navigate('/')}>
+            Voltar aos Usuarios Cadastrados
+          </Botao>
+        )}
+      </div>
+    </S.Aside>
+  )
+}
+
 export default BarraLateral
